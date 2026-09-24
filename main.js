@@ -143,10 +143,16 @@ const alllinks = document.querySelectorAll(".links a")
 
 function scroll(elements) {
     elements.forEach(ele => {
-        ele.addEventListener("click", (e) => {
-            document.querySelector(e.target.dataset.section).scrollIntoView({
-                behavior: "smooth"
-            })
+        // read the target from the element the listener is on (not e.target, which can be
+        // a child such as the bullet tooltip) and skip links without data-section (Home)
+        if (!ele.dataset.section) return;
+        ele.addEventListener("click", () => {
+            const target = document.querySelector(ele.dataset.section);
+            if (target) {
+                target.scrollIntoView({
+                    behavior: "smooth"
+                })
+            }
         })
     });
 }
