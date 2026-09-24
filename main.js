@@ -65,6 +65,8 @@ for (let i = 0; i < randomback.length; i++) {
 
 function randomize() {
     if (backgroundoption === true) {
+        // clear any running timer so clicking "Yes" repeatedly doesn't stack intervals
+        clearInterval(backgroundinterval)
         backgroundinterval = setInterval(function () {
             var landingpage = document.querySelector(".landing-page")
             var landingimgs = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg"]
