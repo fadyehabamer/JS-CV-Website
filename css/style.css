@@ -308,7 +308,7 @@ body {
     z-index: 999999999999999999999;
 }
 
-.header .toggle-menu:focus {
+.header .toggle-menu:focus:not(:focus-visible) {
     outline: none;
 
 }

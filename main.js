@@ -17,9 +17,11 @@ a_nav.forEach(element => {
 
 
 //settings box toggle open and close
-var icon = document.querySelector(".fa-cog").onclick = function () {
-    this.classList.toggle("fa-spin");
-    document.querySelector(".settings-box").classList.toggle("open")
+const settingstoggle = document.querySelector(".toggle-settings")
+settingstoggle.onclick = function () {
+    this.querySelector(".fa-cog").classList.toggle("fa-spin");
+    const isopen = document.querySelector(".settings-box").classList.toggle("open")
+    this.setAttribute("aria-expanded", isopen)
 }
 
 
@@ -122,7 +124,11 @@ ourgallery.forEach(img => {
         closebutton.appendChild(closebuttontext)
 
         closebutton.className = "close-button"
+        closebutton.setAttribute("role", "button")
+        closebutton.setAttribute("tabindex", "0")
+        closebutton.setAttribute("aria-label", "Close image")
         popup_box.appendChild(closebutton)
+        closebutton.focus()
 
     })
 })
@@ -197,6 +203,21 @@ document.addEventListener("click", (e) => {
     if (e.target !== tooglebutton && e.target !== menulinks) {
         tooglebutton.classList.remove("menu-active")
         menulinks.classList.remove("open")
+    }
+})
+
+
+// keyboard support: let Enter / Space activate the div/span/li controls marked role="button"
+document.addEventListener("keydown", (e) => {
+    const control = e.target.closest && e.target.closest('[role="button"]')
+    if (control && (e.key === "Enter" || e.key === " ")) {
+        e.preventDefault()
+        control.click()
+    }
+    // Escape closes the gallery pop-up
+    if (e.key === "Escape") {
+        const closebutton = document.querySelector(".popup_box .close-button")
+        if (closebutton) closebutton.click()
     }
 })
 
