@@ -17,9 +17,11 @@ a_nav.forEach(element => {
 
 
 //settings box toggle open and close
-var icon = document.querySelector(".fa-cog").onclick = function () {
-    this.classList.toggle("fa-spin");
-    document.querySelector(".settings-box").classList.toggle("open")
+const settingstoggle = document.querySelector(".toggle-settings")
+settingstoggle.onclick = function () {
+    this.querySelector(".fa-cog").classList.toggle("fa-spin");
+    const isopen = document.querySelector(".settings-box").classList.toggle("open")
+    this.setAttribute("aria-expanded", isopen)
 }
 
 
@@ -65,6 +67,8 @@ for (let i = 0; i < randomback.length; i++) {
 
 function randomize() {
     if (backgroundoption === true) {
+        // clear any running timer so clicking "Yes" repeatedly doesn't stack intervals
+        clearInterval(backgroundinterval)
         backgroundinterval = setInterval(function () {
             var landingpage = document.querySelector(".landing-page")
             var landingimgs = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg"]
@@ -120,7 +124,11 @@ ourgallery.forEach(img => {
         closebutton.appendChild(closebuttontext)
 
         closebutton.className = "close-button"
+        closebutton.setAttribute("role", "button")
+        closebutton.setAttribute("tabindex", "0")
+        closebutton.setAttribute("aria-label", "Close image")
         popup_box.appendChild(closebutton)
+        closebutton.focus()
 
     })
 })
@@ -143,10 +151,16 @@ const alllinks = document.querySelectorAll(".links a")
 
 function scroll(elements) {
     elements.forEach(ele => {
-        ele.addEventListener("click", (e) => {
-            document.querySelector(e.target.dataset.section).scrollIntoView({
-                behavior: "smooth"
-            })
+        // read the target from the element the listener is on (not e.target, which can be
+        // a child such as the bullet tooltip) and skip links without data-section (Home)
+        if (!ele.dataset.section) return;
+        ele.addEventListener("click", () => {
+            const target = document.querySelector(ele.dataset.section);
+            if (target) {
+                target.scrollIntoView({
+                    behavior: "smooth"
+                })
+            }
         })
     });
 }
@@ -189,6 +203,21 @@ document.addEventListener("click", (e) => {
     if (e.target !== tooglebutton && e.target !== menulinks) {
         tooglebutton.classList.remove("menu-active")
         menulinks.classList.remove("open")
+    }
+})
+
+
+// keyboard support: let Enter / Space activate the div/span/li controls marked role="button"
+document.addEventListener("keydown", (e) => {
+    const control = e.target.closest && e.target.closest('[role="button"]')
+    if (control && (e.key === "Enter" || e.key === " ")) {
+        e.preventDefault()
+        control.click()
+    }
+    // Escape closes the gallery pop-up
+    if (e.key === "Escape") {
+        const closebutton = document.querySelector(".popup_box .close-button")
+        if (closebutton) closebutton.click()
     }
 })
 
